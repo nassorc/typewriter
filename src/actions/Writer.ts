@@ -19,6 +19,13 @@ class Writer {
     }
     this.options = options as Options
   }
+
+  public type(text: string) {
+    const textNode = document.createTextNode(text)
+    this.element?.appendChild(textNode)
+    return this
+  }
+}
 function changeStateToTrue(state: {value: boolean}) {
   setTimeout(() => {
     state.value = true
