@@ -5,6 +5,7 @@ type Options = {
 class Writer {
   element: HTMLElement | null
   options: Options
+  events: Array<any>
 
   constructor(
     querySelector: string, 
@@ -18,11 +19,29 @@ class Writer {
       throw new Error('The required DOM element was not found. QuerySelector must select a valid element.')
     }
     this.options = options as Options
+    this.events = []
   }
 
   public type(text: string) {
-    const textNode = document.createTextNode(text)
-    this.element?.appendChild(textNode)
+    for(const ch of text) {
+      const event = () => {
+        const textNode = document.createTextNode(ch)
+        this.element?.appendChild(textNode)
+      }
+      this.events.push(event)
+    }
+    return this
+  }
+
+  public go() {
+    if(this.events.length) {
+      setTimeout(() => {
+        console.log(this.events)
+        const event = this.events.shift()
+        event()
+        this.go()
+      }, this.options.speed)
+    }
     return this
   }
 }

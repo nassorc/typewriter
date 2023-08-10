@@ -12,8 +12,6 @@ beforeEach(() => {
   selectedElement.textContent = ""
 })
 
-
-
 describe('Writer', () => {
   it('should create an instance of type Writer', () => {
     expect(new Writer("#writer")).toBeInstanceOf(Writer);
@@ -23,15 +21,26 @@ describe('Writer', () => {
     expect(() => new Writer('#does-not-exist')).toThrow();
   })
   it('should append "H" to selected element', () => {
+    vi.useFakeTimers();
     const writerInstance = new Writer('#writer')
-    writerInstance.type('H')
+    writerInstance.type('H').go()
+    vi.advanceTimersByTime(50)
     const queryElement = dom.window.document.querySelector("#writer")?.textContent
     expect(queryElement).toBe('H')
   })
-  it('should append "Hello" to selected element', () => {
+  it('should append each character in "Hello" with a delay', () => {
+    vi.useFakeTimers();
     const content = 'Hello'
-    const writerInstance = new Writer('#writer')
-    writerInstance.type(content)
+    const speed = 50
+    const totalDuration = content.length * speed;
+
+    const writerInstance = new Writer('#writer', {
+      speed: speed
+    })
+
+    writerInstance.type(content).go()
+    vi.advanceTimersByTime(totalDuration)
+    
     const queryElement = dom.window.document.querySelector("#writer")?.textContent
     expect(queryElement).toBe(content)
   })
