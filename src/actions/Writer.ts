@@ -18,6 +18,11 @@ class Writer {
     if (!this.element) {
       throw new Error('The required DOM element was not found. QuerySelector must select a valid element.')
     }
+    const cursor = document.createElement('span')
+    cursor.appendChild(document.createTextNode('|'))
+    cursor.classList.add('cursor')
+    cursor.style.fontSize = '1.4em'
+    // this.element.appendChild(cursor)
     this.options = options as Options
     this.events = []
   }
@@ -26,7 +31,8 @@ class Writer {
     for(const ch of text) {
       const event = () => {
         const textNode = document.createTextNode(ch)
-        this.element?.appendChild(textNode)
+        const cursor = this.element?.querySelector('span')
+        this.element?.insertBefore(textNode, cursor)
       }
       this.events.push(event)
     }
@@ -36,11 +42,14 @@ class Writer {
   public go() {
     if(this.events.length) {
       setTimeout(() => {
-        console.log(this.events)
+        this.element?.querySelector('span').classList.remove('cursor')
         const event = this.events.shift()
         event()
         this.go()
       }, this.options.speed)
+    }
+    else {
+      this.element?.querySelector('span').classList.add('cursor')
     }
     return this
   }
