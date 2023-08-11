@@ -59,8 +59,8 @@ class Writer {
     for(let idx = 0; idx < Math.abs(moves); ++idx) {
       const event = () => {
         // search curosr location
-        const elementRegExp = /<[\w\s=\-'";:.]+>[\s\S]*<\/\w+>/ 
-        const cursorLoc = this.element?.innerHTML.search(elementRegExp);
+        const cursorLoc = this.getCursorLocation()
+        if(cursorLoc == -1) return
         this.removeCursor() // not remove cursor leaves behind a trial of cursors
 
         // shift items depending on direction
@@ -107,6 +107,11 @@ class Writer {
   }
   private removeCursor() {
     this.element?.removeChild(this.element.querySelector('span.cursor'))
+  }
+  private getCursorLocation(): number {
+    const elementRegExp = /<[\w\s=\-'";:.]+>[\s\S]*<\/\w+>/ 
+    const cursorLoc = this.element?.innerHTML.search(elementRegExp)
+    return cursorLoc ? cursorLoc : -1
   }
   private addEvent(event: () => void) {
     this.events.push(event)
