@@ -65,6 +65,10 @@ class Writer {
     this.events.push(resetSpeed)
     return this
   }
+
+  public changeSpeed(ms: number) {
+    this.options.speed = ms;
+  }
 }
 function changeStateToTrue(state: {value: boolean}) {
   setTimeout(() => {
