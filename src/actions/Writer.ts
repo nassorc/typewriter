@@ -79,6 +79,26 @@ class Writer {
     return this
   }
 
+  public delete(amount) {
+    for(let idx = 0; idx < Math.abs(amount); ++idx) {
+      const deleteEvent = () => {
+        const cursorLoc = this.getCursorLocation()
+        if(cursorLoc == -1) return
+        this.removeCursor() // not remove cursor leaves behind a trial of cursors
+        const text = this.element?.textContent
+        const firstHalf = text?.substring(0, cursorLoc - 1)
+        const secondHalf = text?.substring(cursorLoc)
+
+        // append items
+        this.element.innerHTML = firstHalf
+        this.element?.appendChild(this.createCursor())
+        this.element.innerHTML += secondHalf
+      }
+      this.addEvent(deleteEvent)
+    }
+    return this
+  }
+
   public pause(ms: number) {
     const previousSpeed = this.options.speed
     const pause = () => {
