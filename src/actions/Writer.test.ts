@@ -25,7 +25,9 @@ describe('Writer', () => {
     const writerInstance = new Writer('#writer')
     writerInstance.type('H').go()
     vi.advanceTimersByTime(50)
-    const queryElement = dom.window.document.querySelector("#writer")?.textContent
+    const writerElm = dom.window.document.querySelector('#writer');
+    writerElm?.removeChild(writerElm.querySelector('span'))
+    const queryElement = writerElm.textContent
     expect(queryElement).toBe('H')
   })
   it('should append each character in "Hello" with a delay', () => {
@@ -41,7 +43,9 @@ describe('Writer', () => {
     writerInstance.type(content).go()
     vi.advanceTimersByTime(totalDuration)
     
-    const queryElement = dom.window.document.querySelector("#writer")?.textContent
+    const writerElm = dom.window.document.querySelector('#writer');
+    writerElm?.removeChild(writerElm.querySelector('span'))
+    const queryElement = writerElm.textContent
     expect(queryElement).toBe(content)
   })
 })
