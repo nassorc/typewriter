@@ -18,11 +18,8 @@ class Writer {
     if (!this.element) {
       throw new Error('The required DOM element was not found. QuerySelector must select a valid element.')
     }
-    const cursor = document.createElement('span')
-    cursor.appendChild(document.createTextNode('|'))
-    cursor.classList.add('cursor')
-    cursor.style.fontSize = '1.4em'
-    // this.element.appendChild(cursor)
+    const cursor = this.createCursor()
+    this.element.appendChild(cursor)
     this.options = options as Options
     this.events = []
   }
@@ -42,17 +39,45 @@ class Writer {
   public go() {
     if(this.events.length) {
       setTimeout(() => {
-        this.element?.querySelector('span').classList.remove('cursor')
+        // this.element?.querySelector('span').classList.remove('cursor')
         const event = this.events.shift()
         event()
         this.go()
       }, this.options.speed)
     }
     else {
-      this.element?.querySelector('span').classList.add('cursor')
+      // this.element?.querySelector('span').classList.add('cursor')
     }
     return this
   }
+
+  public move(moves: number) {
+    // determine direction to move cursor
+    const direction = moves > 0 ? 1 : -1;
+    // shift items abs(moves) tomes
+    for(let idx = 0; idx < Math.abs(moves); ++idx) {
+      const event = () => {
+        // search curosr location
+        const elementRegExp = /<[\w\s=\-'";:.]+>[\s\S]*<\/\w+>/ 
+        const cursorLoc = this.element?.innerHTML.search(elementRegExp);
+        this.removeCursor() // not remove cursor leaves behind a trial of cursors
+
+        // shift items depending on direction
+        const text = this.element?.textContent
+        const firstHalf = text?.substring(0, cursorLoc + direction)
+        const secondHalf = text?.substring(cursorLoc + direction)
+
+        // append items
+        this.element.innerHTML = firstHalf
+        this.element?.appendChild(this.createCursor())
+        this.element.innerHTML += secondHalf
+      }
+      // push event
+      this.events.push(event)
+    }
+    return this
+  }
+
   public pause(ms: number) {
     const previousSpeed = this.options.speed
     const pause = () => {
