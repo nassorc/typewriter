@@ -69,6 +69,19 @@ class Writer {
   public changeSpeed(ms: number) {
     this.options.speed = ms;
   }
+
+  private createCursor(): HTMLElement {
+    const cursor = document.createElement('span')
+    cursor.appendChild(document.createTextNode('|'))
+    cursor.classList.add('cursor')
+    cursor.style.fontSize = '1.4em'
+    cursor.style.display = 'inline-block'
+    cursor.style.width = '0'
+    return cursor
+  }
+  private removeCursor() {
+    this.element?.removeChild(this.element.querySelector('span.cursor'))
+  }
 }
 function changeStateToTrue(state: {value: boolean}) {
   setTimeout(() => {
