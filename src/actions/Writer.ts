@@ -53,6 +53,18 @@ class Writer {
     }
     return this
   }
+  public pause(ms: number) {
+    const previousSpeed = this.options.speed
+    const pause = () => {
+      this.options.speed = ms
+    }
+    const resetSpeed = () => {
+      this.options.speed = previousSpeed
+    }
+    this.events.push(pause)
+    this.events.push(resetSpeed)
+    return this
+  }
 }
 function changeStateToTrue(state: {value: boolean}) {
   setTimeout(() => {
