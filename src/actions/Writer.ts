@@ -2,10 +2,11 @@ type Options = {
   startDelay: number
   speed: number
 } 
+type EventType = () => void
 class Writer {
   element: HTMLElement | null
   options: Options
-  events: Array<any>
+  events: Array<EventType>
 
   constructor(
     querySelector: string, 
@@ -31,7 +32,7 @@ class Writer {
         const cursor = this.element?.querySelector('span')
         this.element?.insertBefore(textNode, cursor)
       }
-      this.events.push(event)
+      this.addEvent(event)
     }
     return this
   }
@@ -73,7 +74,7 @@ class Writer {
         this.element.innerHTML += secondHalf
       }
       // push event
-      this.events.push(event)
+      this.addEvent(event)
     }
     return this
   }
@@ -106,6 +107,9 @@ class Writer {
   }
   private removeCursor() {
     this.element?.removeChild(this.element.querySelector('span.cursor'))
+  }
+  private addEvent(event: () => void) {
+    this.events.push(event)
   }
 }
 function changeStateToTrue(state: {value: boolean}) {
