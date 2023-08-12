@@ -67,3 +67,18 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+.cursor {
+  opacity: 0.5;
+  /* animation: cursor-pulse 1.1s linear infinite; */
+  font-size: 1.4em;
+}
+@keyframes cursor-pulse {
+  0%,
+  50% {
+    opacity: 0;
+  }
+  51%,
+  100% {
+    opacity: 1;
+  }
+}

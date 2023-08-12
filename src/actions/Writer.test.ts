@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import Writer, { changeStateToTrue } from './Writer'
+import Writer from './Writer'
 import { JSDOM } from 'jsdom'
 
 const ELEMENT_ID = "writer";
@@ -13,8 +13,9 @@ beforeEach(() => {
 })
 
 describe('Writer', () => {
+  const elmIDSelector = '#writer'
   it('should create an instance of type Writer', () => {
-    expect(new Writer("#writer")).toBeInstanceOf(Writer);
+    expect(new Writer(elmIDSelector)).toBeInstanceOf(Writer);
   })
   it('should throw error if querySelector does not select valid element', () => {
     // const writerInstance = 
@@ -22,7 +23,7 @@ describe('Writer', () => {
   })
   it('should append "H" to selected element', () => {
     vi.useFakeTimers();
-    const writerInstance = new Writer('#writer')
+    const writerInstance = new Writer(elmIDSelector)
     writerInstance.type('H').go()
     vi.advanceTimersByTime(50)
     const writerElm = dom.window.document.querySelector('#writer');
@@ -36,28 +37,43 @@ describe('Writer', () => {
     const speed = 50
     const totalDuration = content.length * speed;
 
-    const writerInstance = new Writer('#writer', {
+    const writerInstance = new Writer(elmIDSelector, {
       speed: speed
     })
 
     writerInstance.type(content).go()
     vi.advanceTimersByTime(totalDuration)
     
-    const writerElm = dom.window.document.querySelector('#writer');
+    const writerElm = dom.window.document.querySelector(elmIDSelector);
     writerElm?.removeChild(writerElm.querySelector('span'))
     const queryElement = writerElm.textContent
     expect(queryElement).toBe(content)
   })
-})
+  it('it should type Java, pause for 5 seconds, then type Script', () => {
+    vi.useFakeTimers()
+    const java = "Java"
+    const script = "Script"
+    const pause = 5000
+    const speed = 50
+    const writerDuration = (java.length * speed) + (script.length * speed) + pause
+    const writerInstnace = new Writer(elmIDSelector, {
+      speed
+    })
+    writerInstnace
+      .type(java)
+      .pause(pause)
+      .type(script)
+      .go()
+    vi.advanceTimersByTime(writerDuration)
 
-describe('changeStateToTrue', () => {
-  it('should change state to true', () => {
-    vi.useFakeTimers();
-    const state = {
-      value: false
-    }
-    changeStateToTrue(state)
-    vi.advanceTimersByTime(2000);
-    expect(state.value).toBe(true);
+    const writerElm = dom.window.document.querySelector(elmIDSelector)
+    const textContent = writerElm?.textContent?.replace('|', '')
+    expect(textContent).toBe(java+script)
+
+    // writerElm = dom.window.document.querySelector(elmIDSelector)
+    // textContent = writerElm?.textContent?.replace('|', '')
+
+    // vi.advanceTimersByTime(1000)
+    // expect(textContent).toBe("hello")
   })
 })

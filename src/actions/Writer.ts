@@ -99,10 +99,22 @@ class Writer {
     return this
   }
 
+  /**
+   * Temporarily changes the iteration speed to match the pause time.
+   * Then after pause duration, reset iteration speed to previous speed
+   * @param ms Number of milliseconds to pause the writer
+   * @returns 
+   */
   public pause(ms: number) {
+    // save previous speed in function environment for inner closure
     const previousSpeed = this.options.speed
+    // when pause event is called, it changes the writer iteration timeout to match pause
+    // minuse previous speed
     const pause = () => {
-      this.options.speed = ms
+      // not subtracting results in a total in incorrect pause duraction 
+      // example: this.speed = 50; ms(pause) = 5000
+      // this.speed + ms = 5050ms pause
+      this.options.speed = Math.abs(ms - previousSpeed)
     }
     const resetSpeed = () => {
       this.options.speed = previousSpeed
@@ -137,13 +149,5 @@ class Writer {
     this.events.push(event)
   }
 }
-function changeStateToTrue(state: {value: boolean}) {
-  setTimeout(() => {
-    state.value = true
-  }, 2000);
-}
 
 export default Writer;
-export {
-  changeStateToTrue
-}

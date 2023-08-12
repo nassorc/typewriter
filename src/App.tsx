@@ -1,12 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect, useRef} from 'react'
+import Writer from './actions/Writer';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const elementRef = useRef()
+  const [count, setCount] = useState(0);
 
-  return <h1>Hello World</h1>
+  useEffect(() => {
+    if(!elementRef.current) return
+    const writerInstance = new Writer(`#${elementRef.current.id}`, {
+      speed: 100
+    });
+    writerInstance.type("Hello.").move(-3).pause(1000).move(2).delete(2).type("Bye bye").go();
+  }, []);
+
+  return (
+    <section>
+      <h1 ref={elementRef} id="writer"></h1>
+      <button onClick={() => {
+        setCount(count + 1)
+        console.log('doesnt hang' + count)
+      }}>{count}</button>
+    </section>
+  )
 }
 
 export default App
