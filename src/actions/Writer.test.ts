@@ -49,7 +49,7 @@ describe('Writer', () => {
     const queryElement = writerElm.textContent
     expect(queryElement).toBe(content)
   })
-  it('it should type Java, pause for 5 seconds, then type Script', () => {
+  it('should type Java, pause for 5 seconds, then type Script', () => {
     vi.useFakeTimers()
     const java = "Java"
     const script = "Script"
@@ -69,5 +69,17 @@ describe('Writer', () => {
     const writerElm = dom.window.document.querySelector(elmIDSelector)
     const textContent = writerElm?.textContent?.replace('|', '')
     expect(textContent).toBe(java+script)
+  })
+  it('should clear the element when release method is called', () => {
+    vi.useFakeTimers()
+    const speed = 50
+    const writerInstance = new Writer(elmIDSelector, {speed})
+    writerInstance.type("text").go()
+    vi.advanceTimersByTime(4 * speed)
+    expect(dom.window.document.querySelector(elmIDSelector)?.textContent?.replace('|', ''))
+      .toBe('text')
+    writerInstance.release()
+    expect(dom.window.document.querySelector(elmIDSelector)?.textContent)
+      .toBe('')
   })
 })

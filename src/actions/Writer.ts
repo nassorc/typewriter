@@ -99,6 +99,10 @@ class Writer {
     return this
   }
 
+  public release() {
+    this.element.innerHTML = ""
+  }
+
   /**
    * Temporarily changes the iteration speed to match the pause time.
    * Then after pause duration, reset iteration speed to previous speed
