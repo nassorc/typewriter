@@ -42,7 +42,7 @@ class Writer {
       setTimeout(() => {
         // this.element?.querySelector('span').classList.remove('cursor')
         const event = this.events.shift()
-        event()
+        if (event) event()
         this.go()
       }, this.options.speed)
     }
