@@ -69,11 +69,5 @@ describe('Writer', () => {
     const writerElm = dom.window.document.querySelector(elmIDSelector)
     const textContent = writerElm?.textContent?.replace('|', '')
     expect(textContent).toBe(java+script)
-
-    // writerElm = dom.window.document.querySelector(elmIDSelector)
-    // textContent = writerElm?.textContent?.replace('|', '')
-
-    // vi.advanceTimersByTime(1000)
-    // expect(textContent).toBe("hello")
   })
 })

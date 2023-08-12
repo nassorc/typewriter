@@ -106,13 +106,16 @@ class Writer {
    * @returns 
    */
   public pause(ms: number) {
-    // save previous speed in function environment for inner closure
+    // save previous speed in function environment for closures
     const previousSpeed = this.options.speed
-    // when pause event is called, it changes the writer iteration timeout to match pause
-    // minuse previous speed
+    // when the pause event is called, it changes the go/class method's 
+    // timeout speed to ms(pause duration) minus previous speed
     const pause = () => {
-      // not subtracting results in a total in incorrect pause duraction 
-      // example: this.speed = 50; ms(pause) = 5000
+      // not subtracting the previous speed to the pause duration
+      // results to a wrong pause timeout speed of ms + this.speed.
+      // each event iteration is wrapped in a timeOut function with
+      // a timeout duration of speed.ms
+      // example: this.speed = 50; ms(pause duation) = 5000
       // this.speed + ms = 5050ms pause
       this.options.speed = Math.abs(ms - previousSpeed)
     }
